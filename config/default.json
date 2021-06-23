@@ -1,0 +1,4 @@
+{
+    "mongoURI": "mongodb+srv://nipa1902:farligboxkat@cluster0.wbegx.mongodb.net/url_db?retryWrites=true&w=majority",
+    "baseUrl": "http://localhost:5000"
+}

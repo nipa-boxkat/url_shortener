@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>URL Shorten - Boxkat</title>
+
+    <%- include("./partials/header.ejs"); %>
+
+    <style>
+        #links .row.p-1:nth-child(even) {background-color: #f7f7ff;}
+    </style>
+</head>
+
+<script>
+    // JSON-ifies our input so we can post it to our API using Fetch
+    async function postJSON() {
+    
+    let url = document.getElementById("longURL").value;
+    payload = JSON.stringify({longUrl : url});
+
+    const response = await fetch("http://localhost:5000/api/url/shorten", {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: payload
+    });
+    
+console.log(response.status);
+window.location.reload();
+}
+</script>
+
+
+<body>
+
+    <form class="container mt-5 p-3" action="#" id="urlForm">
+        <div class="form-group p-1">
+            <label for="longURL">URL</label>
+            <input required placeholder="Url" type="url" id="longURL">
+            <small class="form-text text-muted">Enter the long URL you wish to shorten (remember to include "https://").</small>
+        </div>
+        <button type="submit" class="btn btn-primary p-3" onClick="postJSON()">Submit</button>
+    </form>
+
+
+<div id="links" class="container">
+
+    <div class="row bg-info text-white p-1">
+        <div class="col-9"><strong>Long URL</strong></div>
+        <div class="col-3"><strong>Short URL</strong></div>
+    </div>
+
+    <!-- Iterate every individual post in DB -->
+    <% urls.forEach(url => { %>
+
+    <div class="row p-1">
+
+            <div class="col-9 overflow-hidden">
+                <a href="<%= url.longUrl %>" title="<%= url.longUrl %>">   <%= url.longUrl %>   </a>
+            </div>
+
+            <div class="col-3" style="border-left: 2px solid black;">
+                 <!-- <%= url.date %> --> <!-- url.shortUrl.substring(22) --> 
+                 <a href="<%= url.shortUrl %>" title="<%= url.longUrl %>">   <%= url.shortUrl.replace("http://localhost:5000/", "") %>   </a>
+            </div>
+    </div>
+
+ <% }) %>
+
+</div> <!-- links -->
+</div> <!-- body-wrapper -->
+<%- include("./partials/footer.ejs"); %>
+</body>
+
+
+
+<script>
+    document.getElementById("urlForm").addEventListener("click", (e) => {
+        e.preventDefault();
+    });
+    
+</script>
+
+</html>
+
